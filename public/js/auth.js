@@ -1,92 +1,151 @@
-// Import Firebase Authentication
-import { auth, db } from "./firebase.js";
+// Import Firebase SDK modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import {
+  getAuth,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   onAuthStateChanged,
   signOut,
 } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  updateDoc,
+  setDoc,
+  getDoc,
+  query,
+  where,
+} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-// Function to handle login
-async function login() {
-  const email = document.getElementById("loginEmail").value.trim();
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBMiqpvbBYRYUeBJ7rB2h6GV0z_5MFyUrk",
+  authDomain: "secondhandapp-8410d.firebaseapp.com",
+  databaseURL: "https://secondhandapp-8410d-default-rtdb.firebaseio.com",
+  projectId: "secondhandapp-8410d",
+  storageBucket: "secondhandapp-8410d.firebasestorage.app",
+  messagingSenderId: "952829070842",
+  appId: "1:952829070842:web:aacef8943e5b68bae22843",
+  measurementId: "G-YMZVJKJPRZ",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+// Login Function
+document.getElementById("loginBtn")?.addEventListener("click", async () => {
+  const email = document.getElementById("loginEmail").value;
   const password = document.getElementById("loginPassword").value;
-
-  if (!email || !password) {
-    alert("Please enter email and password");
-    return;
-  }
-
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
       email,
       password
     );
-    localStorage.setItem("user", JSON.stringify(userCredential.user));
-    showAuthenticatedUI(); // Show relevant UI after login
+    console.log("User logged in:", userCredential.user);
+    window.location.href = "index.html";
   } catch (error) {
-    alert("Login failed: " + error.message);
+    console.error("Login error:", error.message);
+    alert(error.message);
   }
-}
+});
 
-// Function to handle sign-up
-async function signup() {
-  const email = document.getElementById("signupEmail").value.trim();
+// Signup Function
+document.getElementById("signupBtn")?.addEventListener("click", async () => {
+  const email = document.getElementById("signupEmail").value;
   const password = document.getElementById("signupPassword").value;
-
-  if (!email || !password) {
-    alert("Please enter email and password");
-    return;
-  }
-
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
-    localStorage.setItem("user", JSON.stringify(userCredential.user));
-    showAuthenticatedUI(); // Show relevant UI after signup
+    console.log("User signed up:", userCredential.user);
+    window.location.href = "index.html";
   } catch (error) {
-    alert("Signup failed: " + error.message);
-  }
-}
-
-// Function to check authentication status and toggle UI
-tonAuthStateChanged(auth, (user) => {
-  if (user) {
-    showAuthenticatedUI();
-  } else {
-    showLoginUI();
+    console.error("Signup error:", error.message);
+    alert(error.message);
   }
 });
 
-// Function to handle logout
-function logout() {
+// Ensure users are redirected based on authentication state
+onAuthStateChanged(auth, (user) => {
+  const currentPage = window.location.pathname;
+  if (user) {
+    if (currentPage.includes("login.html")) {
+      window.location.href = "index.html";
+    }
+  } else {
+    if (!currentPage.includes("login.html")) {
+      window.location.href = "login.html";
+    }
+  }
+});
+
+// Logout function
+document.getElementById("logoutBtn")?.addEventListener("click", (event) => {
+  event.preventDefault();
   signOut(auth)
     .then(() => {
       localStorage.removeItem("user");
-      showLoginUI(); // Show login UI after logout
+      window.location.href = "login.html";
     })
     .catch((error) => {
       alert("Logout failed: " + error.message);
     });
+});
+async function loadItems(category = "") {
+  console.log("Fetching items for category:", category);
+  const itemsList = document.getElementById("itemsList");
+  if (!itemsList) return;
+
+  itemsList.innerHTML = "<p>Loading items...</p>";
+  let q = collection(db, "items");
+
+  if (category) {
+    q = query(q, where("category", "==", category));
+  }
+
+  try {
+    const querySnapshot = await getDocs(q);
+    itemsList.innerHTML = "";
+
+    if (querySnapshot.empty) {
+      itemsList.innerHTML = "<p>No items found.</p>";
+      return;
+    }
+
+    querySnapshot.forEach((doc) => {
+      const item = doc.data();
+      console.log("Item fetched:", item); // Debug log
+      const itemElement = document.createElement("div");
+      itemElement.classList.add("marketplace-item");
+      itemElement.innerHTML = `
+              <img src="${item.imageUrl}" alt="${item.name}" width="150">
+              <h3>${item.name}</h3>
+              <p>Category: ${item.category}</p>
+              <p>Price: $${item.price}</p>
+              <p>Seller: ${item.seller}</p>
+          `;
+      itemsList.appendChild(itemElement);
+    });
+  } catch (error) {
+    console.error("Error loading marketplace items:", error);
+    itemsList.innerHTML = "<p>Error loading items.</p>";
+  }
 }
 
-// Function to show authenticated UI
-function showAuthenticatedUI() {
-  document.getElementById("authOptions").style.display = "none";
-  document.getElementById("userOptions").style.display = "block";
-}
-
-// Function to show login UI
-function showLoginUI() {
-  document.getElementById("authOptions").style.display = "block";
-  document.getElementById("userOptions").style.display = "none";
-}
-
-// Attach event listeners
-document.getElementById("loginBtn")?.addEventListener("click", login);
-document.getElementById("signupBtn")?.addEventListener("click", signup);
-document.getElementById("logoutBtn")?.addEventListener("click", logout);
+// Ensure items load on page load
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.location.pathname.includes("index.html")) {
+    loadItems(); // Load all items by default
+  }
+});

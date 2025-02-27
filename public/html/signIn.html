@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <script src="firebase.js" type="module"></script>
+    <script src="auth.js" type="module"></script>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Linking existing CSS -->
+  </head>
+  <body>
+    <div class="container">
+      <h2>Create an Account</h2>
+
+      <!-- Email & Password Sign-Up -->
+      <input
+        type="email"
+        id="signupEmail"
+        placeholder="Enter your email"
+        required
+      />
+      <input
+        type="password"
+        id="signupPassword"
+        placeholder="Enter your password"
+        required
+      />
+      <button id="signupBtn">Sign Up</button>
+
+      <p>Already have an account? <a href="login.html">Log in</a></p>
+
+      <hr />
+
+      <!-- Google Sign-In -->
+      <h3>Or Sign in with Google</h3>
+      <button id="googleSignInBtn">Sign in with Google</button>
+
+      <p id="authMessage"></p>
+    </div>
+
+    <script type="module">
+      import {
+        getAuth,
+        createUserWithEmailAndPassword,
+        signInWithPopup,
+        GoogleAuthProvider,
+      } from "firebase/auth";
+
+      const auth = getAuth();
+      const provider = new GoogleAuthProvider();
+
+      // Sign Up with Email & Password
+      document.getElementById("signupBtn").addEventListener("click", () => {
+        const email = document.getElementById("signupEmail").value;
+        const password = document.getElementById("signupPassword").value;
+
+        createUserWithEmailAndPassword(auth, email, password)
+          .then(() => {
+            document.getElementById("authMessage").innerText =
+              "Account created successfully! Redirecting...";
+            setTimeout(() => {
+              window.location.href = "index.html"; // Redirect to homepage after signup
+            }, 2000);
+          })
+          .catch((error) => {
+            document.getElementById("authMessage").innerText =
+              "Error: " + error.message;
+          });
+      });
+
+      // Sign In with Google
+      document
+        .getElementById("googleSignInBtn")
+        .addEventListener("click", () => {
+          signInWithPopup(auth, provider)
+            .then(() => {
+              window.location.href = "index.html"; // Redirect to homepage after Google login
+            })
+            .catch((error) => {
+              document.getElementById("authMessage").innerText =
+                "Error: " + error.message;
+            });
+        });
+    </script>
+  </body>
+</html>

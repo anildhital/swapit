@@ -3,34 +3,67 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Second-Hand Marketplace</title>
-    <script src="js/firebase.js" type="module"></script>
-    <script src="js/auth.js" type="module"></script>
-    <link rel="stylesheet" href="css/style.css" />
+    <title>SwapIt</title>
+    <script src="../js/firebase.js" type="module"></script>
+    <script src="../js/auth.js" type="module"></script>
+    <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body>
-    <h1>Welcome to Second-Hand Marketplace</h1>
+    <!-- Navigation Bar -->
+    <header>
+      <h1>SwapIt</h1>
+      <nav>
+        <a href="marketplace.html">Marketplace</a>
+        <a href="search.html">Search</a>
+        <a href="profile.html">Profile</a>
+        <a href="additem.html">Add Item</a>
+        <a href="signup.html">Create an Account</a>
 
-    <!-- Authentication UI (Visible Before Login) -->
-    <div id="authOptions">
-      <h2>Login</h2>
-      <input type="email" id="loginEmail" placeholder="Enter your email" />
-      <input
-        type="password"
-        id="loginPassword"
-        placeholder="Enter your password"
-      />
-      <button id="loginBtn">Login</button>
-      <p><a href="signup.html">Create an Account</a></p>
-    </div>
+        <button id="logoutBtn">Logout</button>
+      </nav>
+    </header>
 
-    <!-- User Options (Hidden Initially, Shown After Login) -->
-    <div id="userOptions" style="display: none">
-      <button id="logoutBtn">Sign Out</button>
-      <a href="profile.html"><button>View Profile</button></a>
-      <a href="additem.html"><button>Sell an Item</button></a>
-      <a href="marketplace.html"><button>View Marketplace</button></a>
-      <a href="search.html"><button>Search Items</button></a>
-    </div>
+    <!-- Hero Section -->
+    <section class="hero">
+      <h2>Find the Best Deals on Second-Hand Items</h2>
+      <p>
+        Explore a wide variety of products and get amazing deals from trusted
+        sellers.
+      </p>
+    </section>
+
+    <!-- Category Filters -->
+    <section class="categories">
+      <h2>Browse by Category</h2>
+      <div class="category-list">
+        <button class="categoryBtn" data-category="Electronics">
+          📱 Electronics
+        </button>
+        <button class="categoryBtn" data-category="Clothing">
+          👕 Clothing
+        </button>
+        <button class="categoryBtn" data-category="Furniture">
+          🛋️ Furniture
+        </button>
+        <button class="categoryBtn" data-category="Books">📚 Books</button>
+        <button class="categoryBtn" data-category="">🔍 All Items</button>
+      </div>
+    </section>
+    <section>
+      <h2>Featured Items</h2>
+      <div id="itemsList" class="items-grid"></div>
+    </section>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".categoryBtn").forEach((button) => {
+          button.addEventListener("click", (event) => {
+            const category = event.target.getAttribute("data-category");
+            localStorage.setItem("selectedCategory", category);
+            window.location.href = "marketplace.html";
+          });
+        });
+      });
+    </script>
   </body>
 </html>

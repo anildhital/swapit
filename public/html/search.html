@@ -4,24 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Search Items</title>
-    <script src="firebase.js" type="module"></script>
-    <script src="search.js" type="module"></script>
-    <link rel="stylesheet" href="style.css" />
+    <script src="../js/search.js" type="module"></script>
+    <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body>
-    <h1>Search & Filter Items</h1>
+    <header>
+      <h1>Search Items</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="marketplace.html">Marketplace</a>
+        <a href="profile.html">Profile</a>
+        <a href="additem.html">Add Item</a>
+        <button id="logoutBtn">Logout</button>
+      </nav>
+    </header>
 
-    <input type="text" id="searchQuery" placeholder="Search for items" />
-    <select id="categoryFilter">
-      <option value="">All Categories</option>
-      <option value="Electronics">Electronics</option>
-      <option value="Clothing">Clothing</option>
-      <option value="Furniture">Furniture</option>
-    </select>
-    <button id="searchBtn">Search</button>
+    <main>
+      <h2>Find Your Item</h2>
+      <div class="search-container">
+        <input type="text" id="searchQuery" placeholder="Search for items..." />
+        <select id="categoryFilter">
+          <option value="">All Categories</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Furniture">Furniture</option>
+          <option value="Books">Books</option>
+        </select>
+        <button id="searchBtn">Search</button>
+      </div>
 
-    <div id="searchResults"></div>
-
-    <a href="index.html">Go Back</a>
+      <div id="searchResults"></div>
+    </main>
   </body>
 </html>
