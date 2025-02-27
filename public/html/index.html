@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Second-Hand Marketplace</title>
+    <script src="js/firebase.js" type="module"></script>
+    <script src="js/auth.js" type="module"></script>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <h1>Welcome to Second-Hand Marketplace</h1>
+
+    <!-- Authentication UI (Visible Before Login) -->
+    <div id="authOptions">
+      <h2>Login</h2>
+      <input type="email" id="loginEmail" placeholder="Enter your email" />
+      <input
+        type="password"
+        id="loginPassword"
+        placeholder="Enter your password"
+      />
+      <button id="loginBtn">Login</button>
+      <p><a href="signup.html">Create an Account</a></p>
+    </div>
+
+    <!-- User Options (Hidden Initially, Shown After Login) -->
+    <div id="userOptions" style="display: none">
+      <button id="logoutBtn">Sign Out</button>
+      <a href="profile.html"><button>View Profile</button></a>
+      <a href="additem.html"><button>Sell an Item</button></a>
+      <a href="marketplace.html"><button>View Marketplace</button></a>
+      <a href="search.html"><button>Search Items</button></a>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View & Edit Profile</title>
+    <script src="firebase.js" type="module"></script>
+    <script src="profile.js" type="module"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>My Profile</h1>
+
+    <img id="profilePic" src="" alt="Profile Picture" width="100" />
+    <input
+      type="url"
+      id="newProfilePic"
+      placeholder="New Profile Picture URL"
+    />
+
+    <p><strong>Username:</strong> <input type="text" id="username" /></p>
+    <p><strong>Email:</strong> <input type="email" id="email" disabled /></p>
+    <p>
+      <strong>Bio:</strong>
+      <textarea
+        id="bio"
+        placeholder="Write something about yourself"
+      ></textarea>
+    </p>
+
+    <button id="updateProfileBtn">Update Profile</button>
+
+    <h3>Change Password</h3>
+    <input type="password" id="newPassword" placeholder="New Password" />
+    <button id="changePasswordBtn">Change Password</button>
+
+    <p id="message"></p>
+
+    <a href="index.html">Go Back</a>
+  </body>
+</html>
